@@ -48,3 +48,15 @@ var posts = [
 ];
 
 // You can implement your module.exports here
+// You can implement your module.exports here
+module.exports = {
+  all: function () {
+    return posts;
+  },
+  find: function(id) {
+    return posts[id];
+  },
+  update: function(id, text) {
+    posts[id].body = text;
+  }
+};

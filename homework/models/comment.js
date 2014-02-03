@@ -91,3 +91,21 @@ var comments = [
 ];
 
 // You can implement your module.exports here
+module.exports = {
+  all: function () {
+    return comments;
+  },
+  find: function(id) {
+    validComments = [];
+
+    for (var i = 0; i < comments.length; i++) {
+      if (id == comments[i].postid) {
+        validComments.push(comments[i]);
+      }
+    }
+    return validComments;
+  },
+  update: function(id, text) {
+    comments[id].body = text;
+  }
+};

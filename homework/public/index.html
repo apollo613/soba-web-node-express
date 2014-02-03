@@ -3,12 +3,22 @@
 <head>
   <title>Homework</title>
 
+
   <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css bootstrap.min.css">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+
   <!-- jQuery -->
   <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+  <!-- // <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script> -->
+  <!-- Underscore -->
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
 
   <style type="text/css">
     h1 {
@@ -17,11 +27,37 @@
     }
   </style>
 
+
+  <script type="text/template" id="post-template">
+    <div class="posts">
+      <h2>Title: <%= title %></h2>
+      <p>Body: <%= body %></p>
+      <p><a href="<%= author %>">Author</a></p>
+      <button id="comment-<%=id%>">Comments</button>
+    </div>
+  </script>
+
+  <script type="text/template" id="comment-template">
+    <div class="comments">
+      <p>ID: <%= id %></p>
+      <p>Body: <%= body %></p>
+    </div>
+  </script>
+
 </head>
 <body>
+
+    <nav class="navbar navbar-default" role="navigation">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/api/posts">Posts</a></li>
+          <li><a href="index.html">Index</a></li>
+        </ul>
+    </nav>
   
   <div class="container">
-    <h1>Example using jQuery to get a resoure from the server</h1>
+    <h1>Example using jQuery to get a resource from the server</h1>
     <div id="post">
       <h3 class="title"></h3>
       <p class="author text-muted"></p>
@@ -32,16 +68,51 @@
   <script type="text/javascript">
     // Modify this example code to make a request to your api, eg:
     // /api/posts OR /api/posts/1 OR /api/posts/1/comments
-    
 
-    /*
-    $.getJSON("/api/posts/65.json", function(data) {
-      $('#post .title').text(data.title);
-      $('#post .author').text(data.author);
+
+    function showComments(id) {
+    // Get comments for specific post
+    // Just use 1 for now.
+    // TODO: figure out how to dynamically get comment id
+      $('#post').replaceWith("");
+      console.log("/api/comments/" + id);
+      var htmlCommentTemplate = $('#comment-template').html();
+      var postsJSON = $.getJSON("/api/comments/" + id, function(data) {
+        _.each(data, function(comment) {
+          var sDiv = _.template(htmlCommentTemplate, comment);
+          $('.container').append(sDiv);
+        });
+      });
+    };
+
+
+    var htmlTemplate = $('#post-template').html();
+    var postsJSON = $.getJSON("/api/posts", function(data) {
+ 
+      _.each(data, function(post) {
+        var sDiv = _.template(htmlTemplate, post);
+        $('#post').append(sDiv);
+
+        // Handle the show comments
+        $(document).ready(function () {
+          $("#comment-" + post.id ).on('click', function () {
+            showComments(post.id);
+          });
+        });
+      });
+
     });
-    */
+
+    // $( "button" ).click(function() {
+    //   console.log("Clicked!!");
+    //   var sDiv = _.template(htmlCommentTemplate, post);
+    //   $( ".posts" ).replaceWith( sDiv );
+    // });
+
 
   </script>
+
+  <script src="https://code.jquery.com/jquery.js"></script>
 
 </body>
 </html>
